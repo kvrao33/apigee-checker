@@ -1,8 +1,0 @@
-<TargetEndpoint name="backend">
-  <HTTPTargetConnection>
-    <LoadBalancer>
-      <Server name="apigee-mock-target" />
-    </LoadBalancer>
-    <Path>/echo</Path>
-  </HTTPTargetConnection>
-</TargetEndpoint>
