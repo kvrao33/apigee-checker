@@ -1,0 +1,16 @@
+<ProxyEndpoint name="default">
+<PreFlow name="PreFlow">
+     <Description>Description</Description>
+     <Request>
+     <Step>
+        <Name>AM-test-message</Name>
+     </Step>
+     </Request>
+</PreFlow>
+  <HTTPProxyConnection>
+    <BasePath>/demo</BasePath>
+  </HTTPProxyConnection>
+  <RouteRule name="backend">
+    <TargetEndpoint>backend</TargetEndpoint>
+  </RouteRule>
+</ProxyEndpoint>

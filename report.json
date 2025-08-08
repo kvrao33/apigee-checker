@@ -1,0 +1,59 @@
+[
+  {
+    "endpoint": "default.xml",
+    "checks": [
+      {
+        "id": "sharedflow-check",
+        "description": "Verify required policies/sharedflows are used in configured flows",
+        "passed": false,
+        "violations": [
+          {
+            "name": "VerifyAPIKey",
+            "type": "Policy",
+            "description": "VerifyAPIKey should be attached to PreFlow request",
+            "rule": {
+              "name": "VerifyAPIKey",
+              "type": "Policy",
+              "description": "VerifyAPIKey should be attached to PreFlow request",
+              "endpoint": "ProxyEndpoint",
+              "flow": "PreFlow",
+              "direction": "Request",
+              "checkPolicySettings": true
+            }
+          },
+          {
+            "name": "OAuthV2",
+            "type": "Policy",
+            "description": "Missing Policy 'OAuthV2' in TargetEndpoint.PostFlow.Response",
+            "rule": {
+              "name": "OAuthV2",
+              "type": "Policy",
+              "endpoint": "TargetEndpoint",
+              "flow": "PostFlow",
+              "direction": "Response",
+              "checkPolicySettings": true
+            }
+          },
+          {
+            "name": "access-auth-sharedflow",
+            "type": "SharedFlow",
+            "description": "Missing SharedFlow 'access-auth-sharedflow' in ProxyEndpoint.ConditionalFlow.Request",
+            "rule": {
+              "name": "access-auth-sharedflow",
+              "type": "SharedFlow",
+              "endpoint": "ProxyEndpoint",
+              "flow": "ConditionalFlow",
+              "direction": "Request",
+              "methods": [
+                "POST"
+              ],
+              "pathSuffixes": [
+                "/validate"
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+]
