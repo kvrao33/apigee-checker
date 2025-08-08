@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage async="false" continueOnError="false" enabled="true" name="AM-test-message">
+    <DisplayName>AM-test-message</DisplayName>
+    <Properties />
+
+    <Set>
+        <Headers />
+        <QueryParams />
+        <FormParams />
+        <Payload contentType="application/json">{"message":"Hi Apigee182"}</Payload>
+        <!-- <Verb>GET</Verb> -->
+        <Path />
+    </Set>
+
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+
+</AssignMessage>
