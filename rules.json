@@ -1,0 +1,58 @@
+{
+  "flows": [
+    {
+      "endpoint": "ProxyEndpoint",
+      "flow": "PreFlow",
+      "direction": "Request",
+      "conditions": [
+        {
+          "description": "At least one of the authentication methods should be present",
+          "anyOf": [
+            { "name": "VerifyAPIKey", "type": "Policy" },
+            { "name": "OAuthV2", "type": "Policy" },
+            { "name": "SAML", "type": "Policy" },
+            { "name": "access-auth-sharedflow", "type": "SharedFlow" }
+          ]
+        },
+        {
+          "description": "All of these policies must be present for rate limiting",
+          "allOf": [
+            { "name": "SpikeArrest", "type": "Policy" },
+            { "name": "Quota", "type": "Policy" }
+          ]
+        },
+         {
+          "description": "JWT must be attached to response",
+          "name": "JWT",
+          "type": "Policy"
+        }
+      ]
+    },
+    {
+      "endpoint": "TargetEndpoint",
+      "flow": "PostFlow",
+      "direction": "Response",
+      "conditions": [
+        {
+          "description": "OAuthV2 must be attached to response",
+          "name": "OAuthV2",
+          "type": "Policy"
+        }
+      ]
+    },
+    {
+      "endpoint": "ProxyEndpoint",
+      "flow": "ConditionalFlow",
+      "direction": "Request",
+      "methods": ["POST"],
+      "pathSuffixes": ["/validate"],
+      "conditions": [
+        {
+          "description": "SharedFlow should be used in validate flow",
+          "name": "access-auth-sharedflow",
+          "type": "SharedFlow"
+        }
+      ]
+    }
+  ]
+}
