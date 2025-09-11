@@ -1,4 +1,4 @@
-import { convertedXMLtoJson } from "./xmltojsonconverter.js";
+import { convertedXMLtoJson } from "../utils/xmltojsonconverter.js";
 import path from "path";
 
 const extractData = async (folderPath, subFolder, transformFn = (data) => data) => {
