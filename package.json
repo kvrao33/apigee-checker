@@ -2,6 +2,7 @@
   "name": "apigee-checker",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,6 +12,8 @@
   "dependencies": {
     "commander": "^14.0.0",
     "fast-xml-parser": "^5.2.5",
-    "fs-extra": "^11.3.0"
+    "fs-extra": "^11.3.0",
+    "nodemon": "^3.1.10",
+    "xml2js": "^0.6.2"
   }
 }
