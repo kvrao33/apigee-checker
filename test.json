@@ -1,0 +1,302 @@
+{
+  "policies": [
+    {
+      "type": "AssignMessage",
+      "name": "AM-removeHeader",
+      "enabled": "true",
+      "continueOnError": "false"
+    },
+    {
+      "type": "AssignMessage",
+      "name": "AM-setGenOtpHashInput",
+      "enabled": "true",
+      "continueOnError": "false"
+    },
+    {
+      "type": "AssignMessage",
+      "name": "AM-setHeader",
+      "enabled": "true",
+      "continueOnError": "false"
+    },
+    {
+      "type": "BasicAuthentication",
+      "name": "BA-AccessToken",
+      "enabled": "false",
+      "continueOnError": "false"
+    },
+    {
+      "type": "ExtractVariables",
+      "name": "EV-getPhoneNo",
+      "enabled": "true",
+      "continueOnError": "true"
+    },
+    {
+      "type": "ExtractVariables",
+      "name": "Extract-Variables-1",
+      "enabled": "true",
+      "continueOnError": "false"
+    },
+    {
+      "type": "ExtractVariables",
+      "name": "Extract-Variables-2",
+      "enabled": "true",
+      "continueOnError": "false"
+    },
+    {
+      "type": "FlowCallout",
+      "name": "FC-messagelogging",
+      "enabled": "true",
+      "continueOnError": "false",
+      "SharedFlowBundle": "SF-MessageLogging-nonprod"
+    },
+    {
+      "type": "FlowCallout",
+      "name": "FC-verifyjwt",
+      "enabled": "true",
+      "continueOnError": "false",
+      "SharedFlowBundle": "OAuthJWTTokenVerification"
+    },
+    {
+      "type": "Javascript",
+      "name": "JS-FetchCustomerRequestValidation",
+      "enabled": "true",
+      "continueOnError": "false"
+    },
+    {
+      "type": "Javascript",
+      "name": "JS-SetGenOtpRequest",
+      "enabled": "true",
+      "continueOnError": "false"
+    },
+    {
+      "type": "Javascript",
+      "name": "JS-SetHashInput",
+      "enabled": "true",
+      "continueOnError": "false"
+    },
+    {
+      "type": "Javascript",
+      "name": "JS-extractToken",
+      "enabled": "true",
+      "continueOnError": "false"
+    },
+    {
+      "type": "Javascript",
+      "name": "JS-setDynamicPath",
+      "enabled": "true",
+      "continueOnError": "false"
+    },
+    {
+      "type": "Javascript",
+      "name": "JS-setValidateOtpRequest",
+      "enabled": "true",
+      "continueOnError": "false"
+    },
+    {
+      "type": "JavaCallout",
+      "name": "Java-HDFC-Bank-Decypt",
+      "enabled": "true",
+      "continueOnError": "false"
+    },
+    {
+      "type": "JavaCallout",
+      "name": "Java-HDFC-Bank-Encryption",
+      "enabled": "true",
+      "continueOnError": "false"
+    },
+    {
+      "type": "JavaCallout",
+      "name": "Java-MessageHash",
+      "enabled": "true",
+      "continueOnError": "false"
+    },
+    {
+      "type": "KeyValueMapOperations",
+      "name": "KVM-Customer-Fetch",
+      "enabled": "true",
+      "continueOnError": "false"
+    },
+    {
+      "type": "RaiseFault",
+      "name": "RF-BadRequest",
+      "enabled": "true",
+      "continueOnError": "false"
+    },
+    {
+      "type": "RaiseFault",
+      "name": "RF-sendResponse",
+      "enabled": "true",
+      "continueOnError": "false"
+    },
+    {
+      "type": "ServiceCallout",
+      "name": "SC-Fetch_CustomerInformation",
+      "enabled": "true",
+      "continueOnError": "false"
+    },
+    {
+      "type": "ServiceCallout",
+      "name": "SC-GenerateOTP",
+      "enabled": "true",
+      "continueOnError": "false"
+    },
+    {
+      "type": "ServiceCallout",
+      "name": "SC-VerifyOTP",
+      "enabled": "true",
+      "continueOnError": "false"
+    },
+    {
+      "type": "ServiceCallout",
+      "name": "SC-accessToken",
+      "enabled": "true",
+      "continueOnError": "false"
+    }
+  ],
+  "proxies": [
+    {
+      "ProxyEndpoint": {
+        "$": { "name": "default" },
+        "PreFlow": {
+          "$": { "name": "PreFlow" },
+          "Request": {
+            "Step": [
+              { "Name": "FC-verifyjwt" },
+              { "Name": "AM-removeHeader" },
+              { "Name": "KVM-Customer-Fetch" },
+              { "Name": "BA-AccessToken" },
+              { "Name": "SC-accessToken" },
+              { "Name": "JS-extractToken" },
+              { "Name": "JS-SetHashInput" }
+            ]
+          },
+          "Response": ""
+        },
+        "Flows": {
+          "Flow": [
+            {
+              "$": { "name": "FetchCustomerInformation" },
+              "Description": "",
+              "Request": {
+                "Step": [
+                  { "Name": "JS-FetchCustomerRequestValidation" },
+                  { "Name": "RF-BadRequest", "Condition": "isError=true" }
+                ]
+              },
+              "Response": "",
+              "Condition": "(proxy.pathsuffix MatchesPath \"/API/Fetch_CustomerInformation_v2\") and (request.verb = \"POST\")"
+            },
+            {
+              "$": { "name": "generateOTP" },
+              "Description": "",
+              "Request": "",
+              "Response": "",
+              "Condition": "(proxy.pathsuffix MatchesPath \"/api/v4/otp-gen\") and (request.verb = \"POST\")"
+            },
+            {
+              "$": { "name": "validateOTP" },
+              "Description": "",
+              "Request": "",
+              "Response": "",
+              "Condition": "(proxy.pathsuffix MatchesPath \"/api/v4/otp-val\") and (request.verb = \"POST\")"
+            },
+            {
+              "$": { "name": "generateOTPV2" },
+              "Description": "",
+              "Request": {
+                "Step": [
+                  { "Name": "Java-MessageHash" },
+                  { "Name": "JS-SetGenOtpRequest" }
+                ]
+              },
+              "Response": "",
+              "Condition": "(proxy.pathsuffix MatchesPath \"/genOtp\") and (request.verb = \"POST\")"
+            },
+            {
+              "$": { "name": "validateOTPV2" },
+              "Description": "",
+              "Request": {
+                "Step": [
+                  { "Name": "Java-MessageHash" },
+                  { "Name": "JS-setValidateOtpRequest" }
+                ]
+              },
+              "Response": "",
+              "Condition": "(proxy.pathsuffix MatchesPath \"/validateOtp\") and (request.verb = \"POST\")"
+            },
+            {
+              "$": { "name": "fetchCustomerComposite" },
+              "Description": "",
+              "Request": {
+                "Step": [
+                  { "Name": "EV-getPhoneNo" },
+                  { "Name": "SC-GenerateOTP" },
+                  { "Name": "Extract-Variables-1" },
+                  { "Name": "SC-VerifyOTP" },
+                  { "Name": "Extract-Variables-2" },
+                  { "Name": "SC-Fetch_CustomerInformation" },
+                  { "Name": "RF-sendResponse" }
+                ]
+              },
+              "Response": "",
+              "Condition": "(proxy.pathsuffix MatchesPath \"/fetchCustomerComposite\") and (request.verb = \"POST\")"
+            }
+          ]
+        },
+        "PostFlow": {
+          "$": { "name": "PostFlow" },
+          "Request": {
+            "Step": {
+              "Condition": " proxy.pathsuffix != \"/fetchCustomerComposite\"",
+              "Name": "Java-HDFC-Bank-Encryption"
+            }
+          },
+          "Response": {
+            "Step": {
+              "Condition": "response.status.code==200 and proxy.pathsuffix != \"/fetchCustomerComposite\"",
+              "Name": "Java-HDFC-Bank-Decypt"
+            }
+          }
+        },
+        "PostClientFlow": {
+          "Response": { "Step": { "Name": "FC-messagelogging" } }
+        },
+        "HTTPProxyConnection": { "BasePath": "/customerInformation" },
+        "RouteRule": { "$": { "name": "default" }, "TargetEndpoint": "default" }
+      }
+    }
+  ],
+  "targets": [
+    {
+      "TargetEndpoint": {
+        "$": { "name": "default" },
+        "PreFlow": {
+          "$": { "name": "PreFlow" },
+          "Request": {
+            "Step": [
+              { "Name": "AM-setHeader" },
+              { "Name": "JS-setDynamicPath" }
+            ]
+          },
+          "Response": ""
+        },
+        "Flows": "",
+        "PostFlow": {
+          "$": { "name": "PostFlow" },
+          "Request": "",
+          "Response": ""
+        },
+        "HTTPTargetConnection": {
+          "SSLInfo": {
+            "Enabled": "true",
+            "ClientAuthEnabled": "true",
+            "KeyStore": "hdfcbank",
+            "KeyAlias": "test"
+          },
+          "LoadBalancer": { "Server": { "$": { "name": "HDFC-customerAPI" } } },
+          "Path": "/{dynamicPath}"
+        }
+      }
+    }
+  ]
+}

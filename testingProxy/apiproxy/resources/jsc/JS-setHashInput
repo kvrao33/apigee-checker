@@ -1,0 +1,31 @@
+var pathsuffix = context.getVariable("proxy.pathsuffix");
+var request = JSON.parse(context.getVariable("request.content"));
+var hashKey = context.getVariable("hashKey");
+var instanceId = context.getVariable("instanceId");
+var apiUser = context.getVariable("apiUser");
+var phoneNo = request.phoneNo;
+var refNo = generateUUID() + phoneNo;
+context.setVariable("refNo", refNo);
+if (pathsuffix === "/genOtp") {
+  //8888|hdfc_nonlifeins|0000000917736795266|7736795266|false|I7T2G6E3K5
+  var hashInput = instanceId + "|" + apiUser + "|000000091" + phoneNo + "|" + refNo + "|false|" + hashKey
+  context.setVariable("hashInput", hashInput);
+} else if (pathsuffix === "/validateOtp") {
+  var passwordValue = '123456'
+  if (request.passwordValue) {
+    passwordValue = request.passwordValue;
+  };
+  //8888|hdfc_nonlifeins|0000000917736795266|7736795266|123456|I7T2G6E3K5
+  var hashInput = instanceId + "|" + apiUser + "|000000091" + phoneNo + "|" + refNo + "|" + passwordValue + "|" + hashKey
+  context.setVariable("hashInput", hashInput);
+}
+
+function generateUUID() {
+  var uuid = '';
+  var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+  for (var i = 0; i < 32; i++) {
+    var randomIndex = Math.floor(Math.random() * chars.length);
+    uuid += chars[randomIndex];
+  }
+  return uuid;
+}

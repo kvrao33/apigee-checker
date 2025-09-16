@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<JavaCallout continueOnError="false" enabled="true" name="Java-HDFC-Bank-Encryption">
+  <DisplayName>Java-HDFC-Bank-Encryption</DisplayName>
+  <Properties>
+    <Property name="method">out</Property>
+    <Property name="inputVariableName">request.content</Property>
+    <Property name="OAuthTokenVariableName">accessToken</Property>
+    <Property name="outputVariableName">request.content</Property>
+  </Properties>
+  <ClassName>apigee.hdfc_bank.OutBond</ClassName>
+  <ResourceURL>java://hdfc-bank-jar-with-dependencies.jar</ResourceURL>
+</JavaCallout>

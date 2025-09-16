@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ServiceCallout continueOnError="false" enabled="true" name="SC-VerifyOTP">
+  <DisplayName>SC-VerifyOTP</DisplayName>
+  <Properties/>
+  <Request clearPayload="true" variable="myRequest">
+    <IgnoreUnresolvedVariables>false</IgnoreUnresolvedVariables>
+    <Set>
+      <Headers>
+        <Header name="Authorization">{request.header.Authorization}</Header>
+      </Headers>
+      <Payload contentType="application/json">
+                {
+                  "phoneNo":"{phoneNo}",
+                  "txnId":"{txnId}"
+                }
+            </Payload>
+      <Verb>POST</Verb>
+    </Set>
+  </Request>
+  <Response>VerifyOTPResponse</Response>
+  <LocalTargetConnection>
+    <Path>/customerInformation/validateOtp</Path>
+  </LocalTargetConnection>
+</ServiceCallout>

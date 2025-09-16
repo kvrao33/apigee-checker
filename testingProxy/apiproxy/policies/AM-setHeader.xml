@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-setHeader">
+  <DisplayName>AM-setHeader</DisplayName>
+  <Properties/>
+  <Remove>
+    <Headers>
+      <Header name="X-Forwarded-For"/>
+    </Headers>
+  </Remove>
+  <Set>
+    <Headers>
+      <Header name="apikey">{clientId}</Header>
+    </Headers>
+  </Set>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <AssignTo createNew="false" transport="http" type="request"/>
+</AssignMessage>

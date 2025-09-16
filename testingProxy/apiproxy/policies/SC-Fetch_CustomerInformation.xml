@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ServiceCallout continueOnError="false" enabled="true" name="SC-Fetch_CustomerInformation">
+  <DisplayName>SC-Fetch_CustomerInformation</DisplayName>
+  <Properties/>
+  <Request clearPayload="true" variable="myRequest">
+    <IgnoreUnresolvedVariables>false</IgnoreUnresolvedVariables>
+    <Set>
+      <Headers>
+        <Header name="Id-token-jwt">{Id-token-jwt}</Header>
+        <Header name="Authorization">{request.header.Authorization}</Header>
+      </Headers>
+      <Payload contentType="application/json">
+                {
+                  "AccountServiceRequest": {
+                    "accountId": "",
+                    "sourceId": "",
+                    "customerId": "",
+                    "PanNo": "{panNo}",
+                    "AadharNo": "",
+                    "MobileNo": "{phoneNo}",
+                    "UCICNo": "",
+                    "soaFillers": {
+                      "MASKED_CARD_NO": "",
+                      "filler2": "",
+                      "filler3": "I",
+                      "filler4": "",
+                      "filler5": ""
+                    },
+                    "soaStandard": {
+                      "service_user": "",
+                      "service_password": "",
+                      "consumer_name": "",
+                      "unique_id": "",
+                      "time_stamp": ""
+                    }
+                  }
+                }
+            </Payload>
+      <Verb>POST</Verb>
+    </Set>
+  </Request>
+  <Response>fetchCustomerResponse</Response>
+  <LocalTargetConnection>
+    <Path>/customerInformation/API/Fetch_CustomerInformation_v2</Path>
+  </LocalTargetConnection>
+</ServiceCallout>

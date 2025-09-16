@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ExtractVariables continueOnError="false" enabled="true" name="Extract-Variables-1">
+  <DisplayName>Extract Variables-1</DisplayName>
+  <Properties/>
+  <Source>GenerateOTPResponse.content</Source>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <JSONPayload>
+    <Variable name="txnId">
+      <JSONPath>$.data.responseString.txnId</JSONPath>
+    </Variable>
+  </JSONPayload>
+</ExtractVariables>

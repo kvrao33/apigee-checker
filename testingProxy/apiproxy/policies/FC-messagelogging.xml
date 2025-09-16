@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<FlowCallout continueOnError="false" enabled="true" name="FC-messagelogging">
+  <DisplayName>FC-messagelogging</DisplayName>
+  <Parameters/>
+  <SharedFlowBundle>SF-MessageLogging-nonprod</SharedFlowBundle>
+</FlowCallout>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<TargetEndpoint name="default">
+  <PreFlow name="PreFlow">
+    <Request>
+      <Step>
+        <Name>AM-setHeader</Name>
+      </Step>
+      <Step>
+        <Name>JS-setDynamicPath</Name>
+      </Step>
+    </Request>
+    <Response/>
+  </PreFlow>
+  <Flows/>
+  <PostFlow name="PostFlow">
+    <Request/>
+    <Response/>
+  </PostFlow>
+  <HTTPTargetConnection>
+    <SSLInfo>
+      <Enabled>true</Enabled>
+      <ClientAuthEnabled>true</ClientAuthEnabled>
+      <KeyStore>hdfcbank</KeyStore>
+      <KeyAlias>test</KeyAlias>
+    </SSLInfo>
+    <LoadBalancer>
+      <Server name="HDFC-customerAPI"/>
+    </LoadBalancer>
+    <Path>/{dynamicPath}</Path>
+  </HTTPTargetConnection>
+</TargetEndpoint>

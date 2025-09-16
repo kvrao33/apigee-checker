@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ServiceCallout continueOnError="false" enabled="true" name="SC-accessToken">
+  <DisplayName>SC-accessToken</DisplayName>
+  <Properties/>
+  <Request clearPayload="true" variable="myRequest">
+    <IgnoreUnresolvedVariables>false</IgnoreUnresolvedVariables>
+    <Set>
+      <Headers>
+        <Header name="Content-Type">application/x-www-form-urlencoded</Header>
+        <Header name="accept">application/json</Header>
+        <Header name="Authorization">{basicAuthToken}</Header>
+      </Headers>
+      <QueryParams>
+        <QueryParam name="grant_type">client_credentials</QueryParam>
+        <QueryParam name="scope">HDFC_ERGO</QueryParam>
+      </QueryParams>
+    </Set>
+  </Request>
+  <Response>calloutResponse</Response>
+  <HTTPTargetConnection>
+    <Properties/>
+    <SSLInfo>
+      <Enabled>true</Enabled>
+      <ClientAuthEnabled>true</ClientAuthEnabled>
+      <KeyStore>hdfcbank</KeyStore>
+      <KeyAlias>test</KeyAlias>
+    </SSLInfo>
+    <LoadBalancer>
+      <Server name="HDFC-customerAPI"/>
+    </LoadBalancer>
+    <Path>/auth/oauth/v2/token</Path>
+  </HTTPTargetConnection>
+</ServiceCallout>

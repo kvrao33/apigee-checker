@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<JavaCallout continueOnError="false" enabled="true" name="Java-HDFC-Bank-Decypt">
+  <DisplayName>Java-HDFC-Bank-Decypt</DisplayName>
+  <Properties/>
+  <ClassName>apigee.hdfc_bank.InBond</ClassName>
+  <ResourceURL>java://hdfc-bank-jar-with-dependencies.jar</ResourceURL>
+</JavaCallout>

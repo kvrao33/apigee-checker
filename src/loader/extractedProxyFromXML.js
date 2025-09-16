@@ -1,5 +1,5 @@
-import { convertedXMLtoJson } from "../utils/xmltojsonconverter.js";
-import path from "path";
+const { convertedXMLtoJson } = require("../utils/xmltojsonconverter");
+const path = require("path");
 
 const extractData = async (folderPath, subFolder, transformFn = (data) => data) => {
   try {
@@ -36,7 +36,4 @@ const extractedAPIProxyData = async (folderPath) => {
   return { policies, proxies, targets };
 };
 
-const folderPath = process.argv[2] || "/home/niveus/DileepKumar/ApigeeTool/apiproxy";
-
-const extracteddata = await extractedAPIProxyData(folderPath);
-console.log("extracteddata:", JSON.stringify(extracteddata, null, 2));
+module.exports = { extractedAPIProxyData };

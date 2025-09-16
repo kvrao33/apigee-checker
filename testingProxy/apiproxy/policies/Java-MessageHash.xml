@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<JavaCallout continueOnError="false" enabled="true" name="Java-MessageHash">
+  <DisplayName>Java-MessageHash</DisplayName>
+  <Properties/>
+  <ClassName>apigee.hdfc_bank.MessageHash</ClassName>
+  <ResourceURL>java://hdfc-bank-jar-with-dependencies.jar</ResourceURL>
+</JavaCallout>
