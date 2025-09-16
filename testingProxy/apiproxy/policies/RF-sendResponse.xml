@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RaiseFault continueOnError="false" enabled="true" name="RF-sendResponse">
+  <DisplayName>RF-sendResponse</DisplayName>
+  <Properties/>
+  <FaultResponse>
+    <Set>
+      <Headers/>
+      <Payload contentType="application/json">{fetchCustomerResponse.content}</Payload>
+      <StatusCode>{fetchCustomerResponse.status.code}</StatusCode>
+      <ReasonPhrase>ok</ReasonPhrase>
+    </Set>
+  </FaultResponse>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</RaiseFault>

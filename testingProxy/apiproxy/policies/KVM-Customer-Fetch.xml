@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<KeyValueMapOperations continueOnError="false" enabled="true" name="KVM-Customer-Fetch" mapIdentifier="customer-fetch">
+  <DisplayName>KVM-Customer-Fetch</DisplayName>
+  <Properties/>
+  <ExclusiveCache>false</ExclusiveCache>
+  <ExpiryTimeInSecs>300</ExpiryTimeInSecs>
+  <Get assignTo="instanceId" index="1">
+    <Key>
+      <Parameter>instanceId</Parameter>
+    </Key>
+  </Get>
+  <Get assignTo="apiUser" index="1">
+    <Key>
+      <Parameter>apiUser</Parameter>
+    </Key>
+  </Get>
+  <Get assignTo="userid" index="1">
+    <Key>
+      <Parameter>userid</Parameter>
+    </Key>
+  </Get>
+  <Get assignTo="pwd" index="1">
+    <Key>
+      <Parameter>pwd</Parameter>
+    </Key>
+  </Get>
+  <Get assignTo="sender" index="1">
+    <Key>
+      <Parameter>sender</Parameter>
+    </Key>
+  </Get>
+  <Get assignTo="msgtxt" index="1">
+    <Key>
+      <Parameter>msgtxt</Parameter>
+    </Key>
+  </Get>
+  <Get assignTo="dcode" index="1">
+    <Key>
+      <Parameter>dcode</Parameter>
+    </Key>
+  </Get>
+  <Get assignTo="msgid" index="1">
+    <Key>
+      <Parameter>msgid</Parameter>
+    </Key>
+  </Get>
+  <Get assignTo="msgtype" index="1">
+    <Key>
+      <Parameter>msgtype</Parameter>
+    </Key>
+  </Get>
+  <Get assignTo="apiKey" index="1">
+    <Key>
+      <Parameter>apiKey</Parameter>
+    </Key>
+  </Get>
+  <Get assignTo="channel" index="1">
+    <Key>
+      <Parameter>channel</Parameter>
+    </Key>
+  </Get>
+  <Get assignTo="userId" index="1">
+    <Key>
+      <Parameter>userId</Parameter>
+    </Key>
+  </Get>
+  <Get assignTo="externalReferenceNo" index="1">
+    <Key>
+      <Parameter>externalReferenceNo</Parameter>
+    </Key>
+  </Get>
+  <Get assignTo="bankCode" index="1">
+    <Key>
+      <Parameter>bankCode</Parameter>
+    </Key>
+  </Get>
+  <Get assignTo="transactionBranch" index="1">
+    <Key>
+      <Parameter>transactionBranch</Parameter>
+    </Key>
+  </Get>
+  <Get assignTo="clientId" index="1">
+    <Key>
+      <Parameter>clientId</Parameter>
+    </Key>
+  </Get>
+  <Get assignTo="clientSecret" index="1">
+    <Key>
+      <Parameter>clientSecret</Parameter>
+    </Key>
+  </Get>
+  <Get assignTo="basicAuthToken" index="1">
+    <Key>
+      <Parameter>basicAuthToken</Parameter>
+    </Key>
+  </Get>
+  <Get assignTo="hashKey" index="1">
+    <Key>
+      <Parameter>hashKey</Parameter>
+    </Key>
+  </Get>
+  <Scope>environment</Scope>
+</KeyValueMapOperations>

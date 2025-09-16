@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ExtractVariables continueOnError="true" enabled="true" name="EV-getPhoneNo">
+  <DisplayName>EV-getPhoneNo</DisplayName>
+  <Properties/>
+  <Source>request.content</Source>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+  <JSONPayload>
+    <Variable name="phoneNo">
+      <JSONPath>$.phoneNo</JSONPath>
+    </Variable>
+    <Variable name="panNo">
+      <JSONPath>$.panNo</JSONPath>
+    </Variable>
+  </JSONPayload>
+</ExtractVariables>

@@ -1,13 +1,8 @@
-import { createRequire } from "module";
-import fs from "fs";
-import path from "path";
+const fs = require('fs');
+const path = require('path');
+const xml2js = require('xml2js');
 
-const require = createRequire(import.meta.url);
-const xml2js = require("xml2js");
-
-const parser = new xml2js.Parser({ explicitArray: false });
-
-export const convertedXMLtoJson = async (dirPath, parserOptions = { explicitArray: false }) => {
+const convertedXMLtoJson = async (dirPath, parserOptions = { explicitArray: false }) => {
   try {
     const parser = new xml2js.Parser(parserOptions); 
     const files = await fs.promises.readdir(dirPath);
@@ -32,3 +27,5 @@ export const convertedXMLtoJson = async (dirPath, parserOptions = { explicitArra
     throw err;
   }
 };
+
+module.exports = { convertedXMLtoJson };
