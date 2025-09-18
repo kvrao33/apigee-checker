@@ -44,8 +44,7 @@
       "endpoint": "ProxyEndpoint",
       "flow": "ConditionalFlow",
       "direction": "Request",
-      "methods": ["POST"],
-      "pathSuffixes": ["/validate"],
+      "ConditionalFlowName":"flow-1",
       "conditions": [
         {
           "description": "SharedFlow should be used in validate flow",

@@ -1,12 +1,10 @@
 const { extractedAPIProxyData } = require("./src/loader/extractedProxyFromXML");
+const { validateAllFlows } = require("./src/services/flowValidator");
 
 // Option 1: Using async IIFE
 (async () => {
   const result = await extractedAPIProxyData("/home/niveus/Apigee/apigee-checker/testingProxy/apiproxy");
-  console.log(result);
+  let data =validateAllFlows(result,result.policies,require('./config/default.json'));
+  console.log(data);
+  
 })();
-
-// OR Option 2: Using Promise chain
-extractedAPIProxyData("/home/niveus/Apigee/apigee-checker/testingProxy/apiproxy")
-  .then(result => console.log(JSON.stringify(result)))
-  .catch(error => console.error(error));
