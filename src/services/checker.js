@@ -13,12 +13,18 @@ function isConditionMet(steps, policies, condition) {
       const policy = policyMap.get(step.Name);
       return policy && policy.type === condition.name;
     });
-  } else {
+  } else if (condition.type === "SharedFlow") {
     return steps.some((step) => {
       const policy = policyMap.get(step.Name);
-      return policy && policy.SharedFlowBundle === condition.name;
+      return (
+        policy &&
+        policy.type === "FlowCallout" &&
+        policy.SharedFlowBundle === condition.name
+      );
     });
   }
+
+  return false;
 }
 
 /**
@@ -30,7 +36,6 @@ function isConditionMet(steps, policies, condition) {
  */
 function validateConditions(steps, policies, conditions) {
   const results = [];
-
   for (const condition of conditions) {
     let metConditions = [];
     let notMetConditions = [];
@@ -61,7 +66,6 @@ function validateConditions(steps, policies, conditions) {
       }
       success = met;
     }
-
     results.push({
       success,
       description: condition.description,
@@ -69,7 +73,9 @@ function validateConditions(steps, policies, conditions) {
       notMetConditions,
       message: success
         ? `Conditions met: ${metConditions.map((c) => c.name).join(", ")}`
-        : `Conditions not met: ${notMetConditions.map((c) => c.name).join(", ")}`,
+        : `Conditions not met: ${notMetConditions
+            .map((c) => c.name)
+            .join(", ")}`
     });
   }
 

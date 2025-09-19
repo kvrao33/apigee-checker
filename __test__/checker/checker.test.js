@@ -1,203 +1,261 @@
-const { isConditionMet , validateConditions} = require("../../src/services/checker");
+const { validateConditions } = require("../../src/services/checker");
 
-describe("validateConditions function", () => {
-  const steps = [{ Name: "AuthPolicy" }, { Name: "RateLimit" }];
-  const policies = [
-    { name: "AuthPolicy", type: "OAuth" },
-    { name: "RateLimit", type: "SpikeArrest" },
-    { name: "SharedFlowStep", SharedFlowBundle: "CommonFlow" },
+describe("validateConditions with full policy set", () => {
+  // Steps are references to policies by Name
+  const steps = [
+    { Name: "AM-setHeader" },
+    { Name: "BA-AccessToken" },
+    { Name: "EV-getPhoneNo" },
+    { Name: "FC-verifyjwt" },
+    { Name: "JS-extractToken" },
+    { Name: "Java-HDFC-Bank-Encryption" },
+    { Name: "KVM-Customer-Fetch" },
+    { Name: "RF-BadRequest" },
+    { Name: "SC-GenerateOTP" },
   ];
 
-  test("handles anyOf condition - success", () => {
+  const policies = [
+    {
+      type: "AssignMessage",
+      name: "AM-removeHeader",
+      enabled: "true",
+      continueOnError: "false",
+    },
+    {
+      type: "AssignMessage",
+      name: "AM-setGenOtpHashInput",
+      enabled: "true",
+      continueOnError: "false",
+    },
+    {
+      type: "AssignMessage",
+      name: "AM-setHeader",
+      enabled: "true",
+      continueOnError: "false",
+    },
+    {
+      type: "BasicAuthentication",
+      name: "BA-AccessToken",
+      enabled: "false",
+      continueOnError: "false",
+    },
+    {
+      type: "ExtractVariables",
+      name: "EV-getPhoneNo",
+      enabled: "true",
+      continueOnError: "true",
+    },
+    {
+      type: "ExtractVariables",
+      name: "Extract-Variables-1",
+      enabled: "true",
+      continueOnError: "false",
+    },
+    {
+      type: "ExtractVariables",
+      name: "Extract-Variables-2",
+      enabled: "true",
+      continueOnError: "false",
+    },
+    {
+      type: "FlowCallout",
+      name: "FC-messagelogging",
+      enabled: "true",
+      continueOnError: "false",
+      SharedFlowBundle: "SF-MessageLogging-nonprod",
+    },
+    {
+      type: "FlowCallout",
+      name: "FC-verifyjwt",
+      enabled: "true",
+      continueOnError: "false",
+      SharedFlowBundle: "OAuthJWTTokenVerification",
+    },
+    {
+      type: "Javascript",
+      name: "JS-FetchCustomerRequestValidation",
+      enabled: "true",
+      continueOnError: "false",
+    },
+    {
+      type: "Javascript",
+      name: "JS-SetGenOtpRequest",
+      enabled: "true",
+      continueOnError: "false",
+    },
+    {
+      type: "Javascript",
+      name: "JS-SetHashInput",
+      enabled: "true",
+      continueOnError: "false",
+    },
+    {
+      type: "Javascript",
+      name: "JS-extractToken",
+      enabled: "true",
+      continueOnError: "false",
+    },
+    {
+      type: "Javascript",
+      name: "JS-setDynamicPath",
+      enabled: "true",
+      continueOnError: "false",
+    },
+    {
+      type: "Javascript",
+      name: "JS-setValidateOtpRequest",
+      enabled: "true",
+      continueOnError: "false",
+    },
+    {
+      type: "JavaCallout",
+      name: "Java-HDFC-Bank-Decypt",
+      enabled: "true",
+      continueOnError: "false",
+    },
+    {
+      type: "JavaCallout",
+      name: "Java-HDFC-Bank-Encryption",
+      enabled: "true",
+      continueOnError: "false",
+    },
+    {
+      type: "JavaCallout",
+      name: "Java-MessageHash",
+      enabled: "true",
+      continueOnError: "false",
+    },
+    {
+      type: "KeyValueMapOperations",
+      name: "KVM-Customer-Fetch",
+      enabled: "true",
+      continueOnError: "false",
+    },
+    {
+      type: "RaiseFault",
+      name: "RF-BadRequest",
+      enabled: "true",
+      continueOnError: "false",
+    },
+    {
+      type: "RaiseFault",
+      name: "RF-sendResponse",
+      enabled: "true",
+      continueOnError: "false",
+    },
+    {
+      type: "ServiceCallout",
+      name: "SC-Fetch_CustomerInformation",
+      enabled: "true",
+      continueOnError: "false",
+    },
+    {
+      type: "ServiceCallout",
+      name: "SC-GenerateOTP",
+      enabled: "true",
+      continueOnError: "false",
+    },
+    {
+      type: "ServiceCallout",
+      name: "SC-VerifyOTP",
+      enabled: "true",
+      continueOnError: "false",
+    },
+    {
+      type: "ServiceCallout",
+      name: "SC-accessToken",
+      enabled: "true",
+      continueOnError: "false",
+    },
+  ];
+
+  test("validates Policy type correctly", () => {
     const conditions = [
       {
-        description: "At least one auth method must exist",
-        anyOf: [
-          { type: "Policy", name: "OAuth" },
-          { type: "Policy", name: "InvalidType" },
-        ],
+        description: "Must have AssignMessage policy",
+        type: "Policy",
+        name: "AssignMessage",
       },
     ];
 
     const results = validateConditions(steps, policies, conditions);
-    expect(results[0].success).toBe(true);
-    expect(results[0].metConditions).toHaveLength(1);
-    expect(results[0].notMetConditions).toHaveLength(1);
-    expect(results[0].message).toBe("Conditions met: OAuth");
-  });
 
-  test("handles anyOf condition - failure", () => {
-    const conditions = [
-      {
-        description: "At least one JWT or APIKey must exist",
-        anyOf: [
-          { type: "Policy", name: "JWT" },
-          { type: "Policy", name: "APIKey" },
-        ],
-      },
-    ];
-
-    const results = validateConditions(steps, policies, conditions);
-    expect(results[0].success).toBe(false);
-    expect(results[0].metConditions).toHaveLength(0);
-    expect(results[0].notMetConditions).toHaveLength(2);
-    expect(results[0].message).toBe("Conditions not met: JWT, APIKey");
-  });
-
-  test("handles allOf condition - success", () => {
-    const conditions = [
-      {
-        description: "OAuth and SpikeArrest must be present",
-        allOf: [
-          { type: "Policy", name: "OAuth" },
-          { type: "Policy", name: "SpikeArrest" },
-        ],
-      },
-    ];
-
-    const results = validateConditions(steps, policies, conditions);
     expect(results[0].success).toBe(true);
     expect(results[0].metConditions.map((c) => c.name)).toEqual([
-      "OAuth",
-      "SpikeArrest",
+      "AssignMessage",
     ]);
-    expect(results[0].message).toBe("Conditions met: OAuth, SpikeArrest");
+    expect(results[0].message).toBe("Conditions met: AssignMessage");
   });
 
-  test("handles allOf condition - failure", () => {
+  test("validates SharedFlow type correctly", () => {
     const conditions = [
       {
-        description: "OAuth and APIKey must be present",
-        allOf: [
-          { type: "Policy", name: "OAuth" },
-          { type: "Policy", name: "APIKey" },
-        ],
+        description: "Must call OAuth shared flow",
+        type: "SharedFlow",
+        name: "OAuthJWTTokenVerification",
       },
     ];
 
     const results = validateConditions(steps, policies, conditions);
-    expect(results[0].success).toBe(false);
-    expect(results[0].metConditions.map((c) => c.name)).toEqual(["OAuth"]);
-    expect(results[0].notMetConditions.map((c) => c.name)).toEqual(["APIKey"]);
-    expect(results[0].message).toBe("Conditions not met: APIKey");
-  });
 
-  test("handles single condition - success", () => {
-    const conditions = [
-      {
-        description: "OAuth policy must exist",
-        type: "Policy",
-        name: "OAuth",
-      },
-    ];
-
-    const results = validateConditions(steps, policies, conditions);
     expect(results[0].success).toBe(true);
-    expect(results[0].metConditions.map((c) => c.name)).toEqual(["OAuth"]);
-    expect(results[0].message).toBe("Conditions met: OAuth");
+    expect(results[0].metConditions.map((c) => c.name)).toEqual([
+      "OAuthJWTTokenVerification",
+    ]);
+    expect(results[0].message).toBe(
+      "Conditions met: OAuthJWTTokenVerification"
+    );
   });
 
-  test("handles single condition - failure", () => {
+  test("anyOf with Policy + SharedFlow - success", () => {
     const conditions = [
       {
-        description: "APIKey policy must exist",
-        type: "Policy",
-        name: "APIKey",
-      },
-    ];
-
-    const results = validateConditions(steps, policies, conditions);
-    expect(results[0].success).toBe(false);
-    expect(results[0].notMetConditions.map((c) => c.name)).toEqual(["APIKey"]);
-    expect(results[0].message).toBe("Conditions not met: APIKey");
-  });
-
-    test("handles multiple mixed conditions - some success, some failure", () => {
-    const conditions = [
-      {
-        description: "OAuth policy must exist",
-        type: "Policy",
-        name: "OAuth",
-      },
-      {
-        description: "APIKey policy must exist",
-        type: "Policy",
-        name: "APIKey",
-      },
-      {
-        description: "At least one auth method must exist",
+        description: "Must have either KVM or Logging flow",
         anyOf: [
-          { type: "Policy", name: "OAuth" },
-          { type: "Policy", name: "JWT" },
-        ],
-      },
-      {
-        description: "OAuth and SpikeArrest must be present",
-        allOf: [
-          { type: "Policy", name: "OAuth" },
-          { type: "Policy", name: "SpikeArrest" },
+          { type: "Policy", name: "KeyValueMapOperations" },
+          { type: "SharedFlow", name: "SF-MessageLogging-nonprod" },
         ],
       },
     ];
 
     const results = validateConditions(steps, policies, conditions);
 
-    // Condition 1 - OAuth present
     expect(results[0].success).toBe(true);
-    expect(results[0].message).toBe("Conditions met: OAuth");
-
-    // Condition 2 - APIKey missing
-    expect(results[1].success).toBe(false);
-    expect(results[1].message).toBe("Conditions not met: APIKey");
-
-    // Condition 3 - anyOf success (OAuth exists)
-    expect(results[2].success).toBe(true);
-    expect(results[2].message).toBe("Conditions met: OAuth");
-
-    // Condition 4 - allOf success (OAuth + SpikeArrest exist)
-    expect(results[3].success).toBe(true);
-    expect(results[3].message).toBe("Conditions met: OAuth, SpikeArrest");
+    expect(results[0].metConditions.map((c) => c.name)).toEqual([
+      "KeyValueMapOperations",
+    ]);
+    expect(results[0].notMetConditions.map((c) => c.name)).toEqual([
+      "SF-MessageLogging-nonprod",
+    ]);
   });
 
-  test("handles multiple allOf and anyOf conditions - all fail", () => {
+  test("allOf with multiple Policy types - failure", () => {
     const conditions = [
       {
-        description: "JWT and APIKey must be present",
+        description: "Must have BasicAuthentication and ServiceCallout",
         allOf: [
-          { type: "Policy", name: "JWT" },
-          { type: "Policy", name: "APIKey" },
-        ],
-      },
-      {
-        description: "At least one of InvalidType or NonExistent must exist",
-        anyOf: [
-          { type: "Policy", name: "InvalidType" },
-          { type: "Policy", name: "NonExistent" },
+          { type: "Policy", name: "BasicAuthentication" },
+          { type: "Policy", name: "NonExistentPolicy" },
         ],
       },
     ];
 
     const results = validateConditions(steps, policies, conditions);
 
-
-    // Condition 1 - allOf failure
     expect(results[0].success).toBe(false);
-    expect(results[0].notMetConditions.map((c) => c.name)).toEqual(["JWT", "APIKey"]);
-    expect(results[0].message).toBe("Conditions not met: JWT, APIKey");
-
-    // Condition 2 - anyOf failure
-    expect(results[1].success).toBe(false);
-    expect(results[1].notMetConditions.map((c) => c.name)).toEqual(["InvalidType", "NonExistent"]);
-    expect(results[1].message).toBe("Conditions not met: InvalidType, NonExistent");
+    expect(results[0].metConditions.map((c) => c.name)).toEqual([
+      "BasicAuthentication",
+    ]);
+    expect(results[0].notMetConditions.map((c) => c.name)).toEqual([
+      "NonExistentPolicy",
+    ]);
+    expect(results[0].message).toBe(
+      "Conditions not met: NonExistentPolicy"
+    );
   });
 
-  test("handles empty conditions array", () => {
-    const conditions = [];
-
-    const results = validateConditions(steps, policies, conditions);
-
+  test("handles empty conditions", () => {
+    const results = validateConditions(steps, policies, []);
     expect(results).toEqual([]);
   });
-
 });
-

@@ -11,7 +11,7 @@
             { "name": "VerifyAPIKey", "type": "Policy" },
             { "name": "OAuthV2", "type": "Policy" },
             { "name": "SAML", "type": "Policy" },
-            { "name": "access-auth-sharedflow", "type": "SharedFlow" }
+            { "name": "OAuthJWTTokenVerification", "type": "SharedFlow" }
           ]
         },
         {
@@ -21,7 +21,7 @@
             { "name": "Quota", "type": "Policy" }
           ]
         },
-         {
+        {
           "description": "JWT must be attached to response",
           "name": "JWT",
           "type": "Policy"
@@ -44,11 +44,11 @@
       "endpoint": "ProxyEndpoint",
       "flow": "ConditionalFlow",
       "direction": "Request",
-      "ConditionalFlowName":"flow-1",
+      "conditionalFlowName":"flow-1",
       "conditions": [
         {
-          "description": "SharedFlow should be used in validate flow",
-          "name": "access-auth-sharedflow",
+          "description": "SharedFlow should be used in validate flow ",
+          "name": "OAuthJWTTokenVerification",
           "type": "SharedFlow"
         }
       ]

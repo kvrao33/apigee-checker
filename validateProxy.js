@@ -1,10 +1,14 @@
-const { extractedAPIProxyData } = require("./src/loader/extractedProxyFromXML");
-const { validateAllFlows } = require("./src/services/flowValidator");
+const { extractedAPIProxyData } = require('./src/loader/extractedProxyFromXML');
+const { printValidationResultTable } = require('./src/services/table');
+const { validateAllFlows } = require('./src/services/validateAllFlows');
+
 
 // Option 1: Using async IIFE
 (async () => {
   const result = await extractedAPIProxyData("/home/niveus/Apigee/apigee-checker/testingProxy/apiproxy");
-  let data =validateAllFlows(result,result.policies,require('./config/default.json'));
-  console.log(data);
+  const data = require('./config/default.json')
+  let data1 =validateAllFlows(result,data);
+  printValidationResultTable(data1)
+  
   
 })();
