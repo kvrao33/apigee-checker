@@ -1,0 +1,91 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Apigee Proxy Validation Results</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background-color: #f2f2f2; }
+    .success { color: #28a745; }
+    .failure { color: #dc3545; }
+    .summary { background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin-top: 20px; }
+    .endpoint { color: #007bff; font-size: 1.2em; margin: 15px 0; }
+  </style>
+</head>
+<body>
+  <h1>Apigee Proxy Validation Results</h1>
+<h2 class="endpoint">ProxyEndpoint : default</h2><table>
+        <tr>
+          <th>Flow</th>
+          <th>Direction</th>
+          <th>Status</th>
+          <th>Description</th>
+          <th>Met Conditions</th>
+          <th>Not Met Conditions</th>
+        </tr>
+        <tr>
+          <td>PreFlow</td>
+          <td>Request</td>
+          <td class="failure">✖ Failed</td>
+          <td>At least one of the authentication methods should be present</td>
+          <td>None</td>
+          <td>VerifyAPIKey (Policy), OAuthV2 (Policy), SAML (Policy), OAuthJWTTokenVerification (SharedFlow)</td>
+        </tr>
+        <tr>
+          <td>PreFlow</td>
+          <td>Request</td>
+          <td class="failure">✖ Failed</td>
+          <td>All of these policies must be present for rate limiting</td>
+          <td>Quota (Policy)</td>
+          <td>SpikeArrest (Policy)</td>
+        </tr>
+        <tr>
+          <td>PreFlow</td>
+          <td>Request</td>
+          <td class="failure">✖ Failed</td>
+          <td>JWT must be attached to response</td>
+          <td>None</td>
+          <td>JWT (Policy)</td>
+        </tr></table><h2 class="endpoint">ProxyEndpoint : default</h2><table>
+        <tr>
+          <th>Flow</th>
+          <th>Direction</th>
+          <th>Status</th>
+          <th>Description</th>
+          <th>Met Conditions</th>
+          <th>Not Met Conditions</th>
+        </tr>
+        <tr>
+          <td>ConditionalFlow</td>
+          <td>Request</td>
+          <td class="failure">✖ Failed</td>
+          <td>SharedFlow should be used in validate flow </td>
+          <td>None</td>
+          <td>OAuthJWTTokenVerification (SharedFlow)</td>
+        </tr></table><h2 class="endpoint">TargetEndpoint : default</h2><table>
+        <tr>
+          <th>Flow</th>
+          <th>Direction</th>
+          <th>Status</th>
+          <th>Description</th>
+          <th>Met Conditions</th>
+          <th>Not Met Conditions</th>
+        </tr>
+        <tr>
+          <td>PostFlow</td>
+          <td>Response</td>
+          <td class="failure">✖ Failed</td>
+          <td>OAuthV2 must be attached to response</td>
+          <td>None</td>
+          <td>OAuthV2 (Policy)</td>
+        </tr></table>
+  <div class="summary">
+    <h2>Final Summary</h2>
+    <p><strong>Total Rules Checked:</strong> 5</p>
+    <p class="success"><strong>✔ Passed:</strong> 0</p>
+    <p class="failure"><strong>✖ Failed:</strong> 5</p>
+  </div>
+  </body>
+  </html>

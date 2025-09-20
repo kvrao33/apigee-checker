@@ -58,13 +58,31 @@ const validateAllFlows = (proxyConfig, validationRules) => {
             const {endpoint, flow, direction,conditions,conditionalFlowName=""} = ruleSet;
             const steps = extractSteps(target, endpoint, flow, direction,conditionalFlowName);
             const validationResult = validateConditions(steps, policies, conditions);
+            
+            // Count successes and failures for each validation
+            validationResult.forEach(result => {
+                if (result.success) {
+                    successfulValidations++;
+                } else {
+                    failedValidations++;
+                }
+            });
+            
             const metConditionsCount = validationResult.filter(r => r.success).length;
             const notMetConditionsCount = validationResult.filter(r => !r.success).length;
             validationResults.push({validationResult,metConditionsCount,notMetConditionsCount,flow,direction,conditionalFlowName})
         })
         results.push({validationResults,endpoint:"TargetEndpoint",name:targetEndpointName})
     });
-    return results;
+    
+    return {
+        results,
+        summary: {
+            total: successfulValidations + failedValidations,
+            passed: successfulValidations,
+            failed: failedValidations
+        }
+    };
 };
 
 module.exports = { extractSteps , validateAllFlows};

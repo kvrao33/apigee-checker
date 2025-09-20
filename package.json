@@ -1,20 +1,29 @@
 {
-  "name": "apigee-checker",
+  "name": "apigee-proxy-checker",
   "version": "1.0.0",
   "main": "index.js",
+  "bin": {
+    "apigee-checker": "./bin/apigee-checker.js"
+  },
   "scripts": {
     "test": "jest"
   },
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "author": "Karthik V Rao <kvrao33@github.com>",
+  "contributors": [
+    "Karthik V Rao",
+    "Dileep Kumar"
+  ],
+  "license": "MIT",
+  "description": "A CLI tool for validating Apigee API proxies. Supports both local and remote proxy validation with multiple output formats.",
   "dependencies": {
     "chalk": "^4.1.2",
     "commander": "^14.0.0",
+    "extract-zip": "^2.0.1",
     "fast-xml-parser": "^5.2.5",
     "fs-extra": "^11.3.0",
     "nodemon": "^3.1.10",
     "table": "^6.9.0",
+    "tmp": "^0.2.5",
     "xml2js": "^0.6.2"
   },
   "devDependencies": {
