@@ -6,21 +6,25 @@
  * @returns {boolean} - Whether the condition is met
  */
 function isConditionMet(steps, policies, condition) {
-  // Convert policies into a Map for fast lookup
   const policyMap = new Map(policies.map((p) => [p.name, p]));
 
   if (condition.type === "Policy") {
-    // Check if ANY step matches the condition
     return steps.some((step) => {
       const policy = policyMap.get(step.Name);
       return policy && policy.type === condition.name;
     });
-  } else {
+  } else if (condition.type === "SharedFlow") {
     return steps.some((step) => {
       const policy = policyMap.get(step.Name);
-      return policy && policy.SharedFlowBundle === condition.name;
+      return (
+        policy &&
+        policy.type === "FlowCallout" &&
+        policy.SharedFlowBundle === condition.name
+      );
     });
   }
+
+  return false;
 }
 
 /**
@@ -28,46 +32,51 @@ function isConditionMet(steps, policies, condition) {
  * @param {Array} steps - Array of objects with "Name" property
  * @param {Array} policies - Array of policy objects
  * @param {Array} conditions - Array of condition objects
- * @returns {Array} Array of validation results with success and error information
+ * @returns {Array} Array of validation results with success and detailed info
  */
 function validateConditions(steps, policies, conditions) {
   const results = [];
-
   for (const condition of conditions) {
+    let metConditions = [];
+    let notMetConditions = [];
+    let success = false;
+
     if (condition.anyOf) {
-      // Handle anyOf conditions
-      const anyConditionMet = condition.anyOf.some(subCondition => 
-        isConditionMet(steps, policies, subCondition)
+      metConditions = condition.anyOf.filter((sub) =>
+        isConditionMet(steps, policies, sub)
       );
-      
-      results.push({
-        success: anyConditionMet,
-        description: condition.description,
-        error: anyConditionMet ? null : 'None of the required authentication methods are present'
-      });
-    } 
-    else if (condition.allOf) {
-      // Handle allOf conditions
-      const allConditionsMet = condition.allOf.every(subCondition => 
-        isConditionMet(steps, policies, subCondition)
+      notMetConditions = condition.anyOf.filter(
+        (sub) => !isConditionMet(steps, policies, sub)
       );
-      
-      results.push({
-        success: allConditionsMet,
-        description: condition.description,
-        error: allConditionsMet ? null : 'Not all required policies are present'
-      });
+      success = metConditions.length > 0;
+    } else if (condition.allOf) {
+      metConditions = condition.allOf.filter((sub) =>
+        isConditionMet(steps, policies, sub)
+      );
+      notMetConditions = condition.allOf.filter(
+        (sub) => !isConditionMet(steps, policies, sub)
+      );
+      success = notMetConditions.length === 0;
+    } else {
+      const met = isConditionMet(steps, policies, condition);
+      if (met) {
+        metConditions.push(condition);
+      } else {
+        notMetConditions.push(condition);
+      }
+      success = met;
     }
-    else {
-      // Handle single condition
-      const conditionMet = isConditionMet(steps, policies, condition);
-      
-      results.push({
-        success: conditionMet,
-        description: condition.description,
-        error: conditionMet ? null : `Required policy '${condition.name}' is not present`
-      });
-    }
+    results.push({
+      success,
+      description: condition.description,
+      metConditions,
+      notMetConditions,
+      message: success
+        ? `Conditions met: ${metConditions.map((c) => c.name).join(", ")}`
+        : `Conditions not met: ${notMetConditions
+            .map((c) => c.name)
+            .join(", ")}`
+    });
   }
 
   return results;

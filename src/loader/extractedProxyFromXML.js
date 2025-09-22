@@ -6,7 +6,7 @@ const extractData = async (folderPath, subFolder, transformFn = (data) => data) 
     const jsonDataArray = await convertedXMLtoJson(path.join(folderPath, subFolder));
     return { [subFolder]: transformFn(jsonDataArray) };
   } catch (error) {
-    console.error(`Error extracting ${subFolder}:`, error.message);
+    // console.error(`Error extracting ${subFolder}:`, error.message);
     return { [subFolder]: [] };
   }
 };

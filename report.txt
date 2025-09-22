@@ -1,0 +1,128 @@
+{
+  "results": [
+    {
+      "validationResults": [
+        {
+          "validationResult": [
+            {
+              "success": false,
+              "description": "At least one of the authentication methods should be present",
+              "metConditions": [],
+              "notMetConditions": [
+                {
+                  "name": "VerifyAPIKey",
+                  "type": "Policy"
+                },
+                {
+                  "name": "OAuthV2",
+                  "type": "Policy"
+                },
+                {
+                  "name": "SAML",
+                  "type": "Policy"
+                },
+                {
+                  "name": "OAuthJWTTokenVerification",
+                  "type": "SharedFlow"
+                }
+              ],
+              "message": "Conditions not met: VerifyAPIKey, OAuthV2, SAML, OAuthJWTTokenVerification"
+            },
+            {
+              "success": false,
+              "description": "All of these policies must be present for rate limiting",
+              "metConditions": [
+                {
+                  "name": "Quota",
+                  "type": "Policy"
+                }
+              ],
+              "notMetConditions": [
+                {
+                  "name": "SpikeArrest",
+                  "type": "Policy"
+                }
+              ],
+              "message": "Conditions not met: SpikeArrest"
+            },
+            {
+              "success": false,
+              "description": "JWT must be attached to response",
+              "metConditions": [],
+              "notMetConditions": [
+                {
+                  "description": "JWT must be attached to response",
+                  "name": "JWT",
+                  "type": "Policy"
+                }
+              ],
+              "message": "Conditions not met: JWT"
+            }
+          ],
+          "metConditionsCount": 0,
+          "notMetConditionsCount": 3,
+          "flow": "PreFlow",
+          "direction": "Request",
+          "conditionalFlowName": ""
+        },
+        {
+          "validationResult": [
+            {
+              "success": false,
+              "description": "SharedFlow should be used in validate flow ",
+              "metConditions": [],
+              "notMetConditions": [
+                {
+                  "description": "SharedFlow should be used in validate flow ",
+                  "name": "OAuthJWTTokenVerification",
+                  "type": "SharedFlow"
+                }
+              ],
+              "message": "Conditions not met: OAuthJWTTokenVerification"
+            }
+          ],
+          "metConditionsCount": 0,
+          "notMetConditionsCount": 1,
+          "flow": "ConditionalFlow",
+          "direction": "Request",
+          "conditionalFlowName": "flow-1"
+        }
+      ],
+      "endpoint": "ProxyEndpoint",
+      "name": "default"
+    },
+    {
+      "validationResults": [
+        {
+          "validationResult": [
+            {
+              "success": false,
+              "description": "OAuthV2 must be attached to response",
+              "metConditions": [],
+              "notMetConditions": [
+                {
+                  "description": "OAuthV2 must be attached to response",
+                  "name": "OAuthV2",
+                  "type": "Policy"
+                }
+              ],
+              "message": "Conditions not met: OAuthV2"
+            }
+          ],
+          "metConditionsCount": 0,
+          "notMetConditionsCount": 1,
+          "flow": "PostFlow",
+          "direction": "Response",
+          "conditionalFlowName": ""
+        }
+      ],
+      "endpoint": "TargetEndpoint",
+      "name": "default"
+    }
+  ],
+  "summary": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1
+  }
+}

@@ -6,7 +6,7 @@
       "direction": "Request",
       "conditions": [
         {
-          "description": "At least one of the authentication methods should be present",
+          "description": "At least one of the authentication methods should be present changes",
           "anyOf": [
             { "name": "VerifyAPIKey", "type": "Policy" },
             { "name": "OAuthV2", "type": "Policy" },

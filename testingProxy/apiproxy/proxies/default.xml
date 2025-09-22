@@ -53,6 +53,16 @@
       <Response/>
       <Condition>(proxy.pathsuffix MatchesPath "/api/v4/otp-val") and (request.verb = "POST")</Condition>
     </Flow>
+    <Flow name="flow-1">
+      <Description/>
+      <Request>
+        <Step>
+          <Name>FC-verifyjwt</Name>
+        </Step>
+      </Request>
+      <Response/>
+      <Condition>(proxy.pathsuffix MatchesPath "/api/v4/otp-val") and (request.verb = "POST")</Condition>
+    </Flow>
     <Flow name="generateOTPV2">
       <Description/>
       <Request>
