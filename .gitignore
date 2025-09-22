@@ -37,4 +37,3 @@ out/
 .idea/
 *.sublime-workspace
 *.sublime-project
-package-lock.json
