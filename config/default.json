@@ -6,50 +6,42 @@
       "direction": "Request",
       "conditions": [
         {
-          "description": "At least one of the authentication methods should be present",
+          "description": "At least one of the authentication policies should be present",
           "anyOf": [
+            { "name": "AccessControl", "type": "Policy" },
+            { "name": "BasicAuthentication", "type": "Policy" },
+            { "name": "HMAC", "type": "Policy" },
+            { "name": "OAuthJWTTokenVerification", "type": "Policy" },
+            { "name": "OAuth", "type": "Policy" },
+            { "name": "ValidateSAMLAssertion", "type": "Policy" },
             { "name": "VerifyAPIKey", "type": "Policy" },
-            { "name": "OAuthV2", "type": "Policy" },
-            { "name": "SAML", "type": "Policy" },
-            { "name": "OAuthJWTTokenVerification", "type": "SharedFlow" }
+            { "name": "VerifyJWS", "type": "Policy" },
+            { "name": "VerifyJWT", "type": "Policy" },
+            { "name": "OAuthV2", "type": "Policy" }
           ]
         },
         {
-          "description": "All of these policies must be present for rate limiting",
-          "allOf": [
+          "description": "any of these policies must be present for rate limiting",
+          "anyOf": [
             { "name": "SpikeArrest", "type": "Policy" },
-            { "name": "Quota", "type": "Policy" }
+            { "name": "Quota", "type": "Policy" },
+            { "name": "LookupCache", "type": "Policy" },
+            { "name": "ResponseCache", "type": "Policy" }
           ]
         },
         {
-          "description": "JWT must be attached to response",
-          "name": "JWT",
-          "type": "Policy"
-        }
-      ]
-    },
-    {
-      "endpoint": "TargetEndpoint",
-      "flow": "PostFlow",
-      "direction": "Response",
-      "conditions": [
+          "description":"Checks whether a mediation policy is enabled in the PreFlow",
+          "anyOf":[
+            { "name": "JSONThreatProtection", "type": "Policy" },
+            { "name": "XMLThreatProtection", "type": "Policy" }]
+        },
         {
-          "description": "OAuthV2 must be attached to response",
-          "name": "OAuthV2",
-          "type": "Policy"
-        }
-      ]
-    },
-    {
-      "endpoint": "ProxyEndpoint",
-      "flow": "ConditionalFlow",
-      "direction": "Request",
-      "conditionalFlowName":"flow-1",
-      "conditions": [
-        {
-          "description": "SharedFlow should be used in validate flow ",
-          "name": "OAuthJWTTokenVerification",
-          "type": "SharedFlow"
+          "description": "Checks to see if threat prevention policies are used.",
+          "anyOf": [
+            { "name": "JSONThreatProtection", "type": "Policy" },
+            { "name": "XMLThreatProtection", "type": "Policy" },
+            { "name":"RegularExpressionProtection", "type": "Policy" }
+          ]
         }
       ]
     }

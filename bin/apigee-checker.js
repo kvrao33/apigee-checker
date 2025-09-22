@@ -19,7 +19,6 @@ const program = new Command();
 program
   .name("apigee-checker")
   .description("CLI to validate Apigee API Proxies using custom rules")
-  .version(pkg.version)
   .option(
     "-s, --path <path>",
     "Path of the proxy bundle to analyze (directory containing apiproxy/)"
@@ -41,9 +40,10 @@ program
     "Name of the proxy to analyze from Apigee"
   )
   .option(
-    "-v, --revision <revision>",
+    "--rev <revision>",
     "Specific revision of the proxy to analyze (default: latest deployed revision if env is specified, otherwise latest revision)"
   )
+  .version(pkg.version, '-v, --version', 'Output the current version')
   .option(
     "-r, --rules <file>",
     "Path to JSON file with rules (default: ./config/default.json)"
@@ -68,7 +68,7 @@ program.on("--help", () => {
   console.log("\nRemote Proxy Testing:");
   console.log("   apigee-checker -o myorg -n myproxy -t mytoken");
   console.log("   apigee-checker -o myorg -n myproxy -e test -t mytoken -r ./myRules.json");
-  console.log("   apigee-checker -o myorg -n myproxy -t mytoken -v 2 -f json");
+  console.log("   apigee-checker -o myorg -n myproxy -t mytoken --rev 2 -f json");
   console.log("   apigee-checker -o myorg -n myproxy -t mytoken -f json -w results.json");
 });
 
@@ -106,7 +106,7 @@ program.on("--help", () => {
           org: options.org,
           token: options.token,
           env: options.env,
-          rev: options.revision
+          rev: options.rev
         });
         
         if (!downloadResult) {

@@ -1,6 +1,24 @@
-# Apigee Proxy Checker
+# Apigee Proxy C## Command Line Options
 
-A powerful command-lin## CI/CD Integration
+### Core Options
+- `-s, --source <path>`: Path to local proxy directory
+- `-o, --org <name>`: Apigee organization name
+- `-n, --name <name>`: Name of the proxy to analyze
+- `-t, --token <token>`: Access token for Apigee authentication
+
+### Revision Control
+- `--rev <number>`: Specific revision to analyze
+- `-e, --env <name>`: Environment name (will use deployed revision)
+
+### Output Options
+- `-f, --format <type>`: Output format (table/json/html)
+- `-w, --write <file>`: Write results to file
+- `-q, --quiet`: Suppress console output
+- `-r, --rules <path>`: Custom rules file path
+
+### Information
+- `-v, --version`: Show version number
+- `-h, --help`: Show help information powerful command-line tool that replaces manual Apigee proxy risk assessment with automated validation. Perfect for CI/CD pipelines, this tool helps ensure your Apigee proxies meet security standards, follow best practices, and maintain consistent policy implementation across your organization.
 
 This tool is designed to be a crucial part of your CI/CD pipeline for Apigee proxy development. It helps:
 
@@ -53,23 +71,76 @@ See [CI/CD Integration Examples](./examples/ci-cd-integration.md) for detailed p
 ## Installation
 
 ```bash
-npm install -g apigee-proxy-checker
+npm install -g apigee-checker
 ```
 
 ## Usage
 
+### Local Proxy Validation with Custom Rules
+
+The custom rules feature is a powerful way to define your organization's specific requirements and best practices. Here's how to use it:
+
 ```bash
-# Validate a local proxy
-apigee-checker -s ./path/to/proxy
+# Structure your proxy folder
+myproxy/
+├── apiproxy/
+│   ├── policies/
+│   ├── proxies/
+│   ├── targets/
+│   └── myproxy.xml
 
-# Validate with specific output format (table, json, html)
-apigee-checker -s ./path/to/proxy -f json
+# Create custom rules file (custom-rules.json)
+{
+  "flows": [
+    {
+      "endpoint": "ProxyEndpoint",
+      "flow": "PreFlow",
+      "direction": "Request",
+      "conditions": [
+        {
+          "description": "Company security standards check",
+          "anyOf": [
+            { "name": "OAuth2-Verify", "type": "SharedFlow" },
+            { "name": "Company-Auth-Flow", "type": "SharedFlow" }
+          ]
+        },
+        {
+          "description": "Required headers check",
+          "allOf": [
+            { "name": "Add-Correlation-ID", "type": "SharedFlow" },
+            { "name": "Verify-API-Version", "type": "SharedFlow" }
+          ]
+        }
+      ]
+    }
+  ]
+}
 
-# Save output to a file
-apigee-checker -s ./path/to/proxy -f html -w report.html
+# Run validation with custom rules
+apigee-checker -s ./myproxy/apiproxy -r ./custom-rules.json -f html -w report.html
 
-# Validate a remote proxy (requires authentication)
-apigee-checker -o org -e env -n proxy-name
+# Example with specific company requirements
+apigee-checker -s ./banking-api/apiproxy -r ./banking-security-rules.json
+
+# Multiple rule sets for different environments
+apigee-checker -s ./payment-api/apiproxy -r ./pci-compliance-rules.json
+apigee-checker -s ./payment-api/apiproxy -r ./dev-rules.json
+```
+
+
+### Remote Proxy Validation
+```bash
+# Validate latest revision
+apigee-checker -o myorg -n myproxy -t $TOKEN
+
+# Validate specific revision
+apigee-checker -o myorg -n myproxy --rev 14 -t $TOKEN
+
+# Validate deployed revision in environment
+apigee-checker -o myorg -n myproxy -e test -t $TOKEN
+
+# Generate JSON report for specific revision
+apigee-checker -o myorg -n myproxy --rev 14 -t $TOKEN -f json -w report.json
 ```
 
 ## Options
@@ -82,9 +153,27 @@ apigee-checker -o org -e env -n proxy-name
 - `-n, --name <name>`: Proxy name to download and validate
 - `-r, --rules <path>`: Path to custom rules JSON file (optional)
 
-## Validation Rules
+## Custom Rules System
 
-The tool uses a set of predefined rules to validate your Apigee proxy. These rules ensure best practices and security standards are followed. You can also provide your own custom rules file.
+The custom rules system is a key feature that allows you to define and enforce your organization's specific requirements, compliance standards, and best practices. This replaces manual security reviews and ensures consistent policy implementation across all your APIs.
+
+### Why Use Custom Rules?
+
+1. **Organization-Specific Standards**
+   - Enforce company-wide security policies
+   - Maintain consistent error handling
+   - Ensure required logging and monitoring
+
+2. **Compliance Requirements**
+   - PCI-DSS compliance for payment APIs
+   - HIPAA compliance for healthcare APIs
+   - GDPR/Data protection requirements
+   - Banking regulations (PSD2, Open Banking)
+
+3. **Environment-Specific Validation**
+   - Different rules for dev/test/prod
+   - Stricter security in production
+   - Mock service requirements in development
 
 ### Default Rules
 
@@ -92,8 +181,6 @@ By default, the tool checks for:
 - Authentication policies in PreFlow
 - Rate limiting and spike arrest policies
 - Required security policies in specific flows
-- Proper use of SharedFlows
-- Flow-specific policy requirements
 
 ### Custom Rules
 

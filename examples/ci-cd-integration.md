@@ -20,7 +20,7 @@ jobs:
           node-version: '16'
       
       - name: Install Apigee Checker
-        run: npm install -g apigee-proxy-checker
+        run: npm install -g apigee-checker
       
       - name: Validate Proxy
         run: |
@@ -46,7 +46,7 @@ pipeline {
             steps {
                 script {
                     // Install the checker
-                    sh 'npm install -g apigee-proxy-checker'
+                    sh 'npm install -g apigee-checker'
                     
                     // Run validation with custom rules
                     def exitCode = sh(
@@ -90,7 +90,7 @@ steps:
   inputs:
     versionSpec: '16.x'
 
-- script: npm install -g apigee-proxy-checker
+- script: npm install -g apigee-checker
   displayName: 'Install Apigee Checker'
 
 - script: |
